@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GUI Change Proposals — FR24 Airspace Intelligence</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a0a; color: #e7e7e7; font-family: -apple-system, system-ui, sans-serif; padding: 20px 16px 40px; max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 20px; font-weight: 700; color: #DAA520; margin-bottom: 4px; }
+  .subtitle { font-size: 12px; color: #6a6a6a; margin-bottom: 20px; }
+  .stats { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+  .stat { background: #131313; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #9a9a9a; }
+  .stat strong { color: #e7e7e7; font-size: 18px; display: block; }
+  .filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .filter { font-size: 12px; padding: 5px 12px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.14); background: #1c1c1c; color: #9a9a9a; cursor: pointer; text-decoration: none; }
+  .filter.active, .filter:hover { background: #DAA520; color: #000; border-color: #DAA520; font-weight: 600; }
+  .card { background: #131313; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+  .card[data-status="PENDING_REVIEW"] { border-left: 3px solid #DAA520; }
+  .card[data-status="APPROVED"] { border-left: 3px solid #4ade80; }
+  .card[data-status="REJECTED"] { border-left: 3px solid #f47171; opacity: 0.65; }
+  .card[data-status="DEFERRED"] { border-left: 3px solid #6a6a6a; opacity: 0.65; }
+  .card-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .card-id { font-size: 13px; font-weight: 700; color: #DAA520; flex-shrink: 0; }
+  .card-title { font-size: 13px; font-weight: 600; flex: 1; min-width: 0; }
+  .badge { font-size: 10px; padding: 3px 8px; border-radius: 10px; font-weight: 600; flex-shrink: 0; }
+  .meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .meta span { font-size: 11px; padding: 2px 7px; border-radius: 10px; background: #1c1c1c; color: #9a9a9a; }
+  .problem { font-size: 12px; color: #9a9a9a; line-height: 1.5; margin-bottom: 8px; }
+  .proposed { font-size: 11px; color: #6a6a6a; line-height: 1.4; margin-bottom: 10px; font-style: italic; }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .btn { font-size: 12px; padding: 7px 16px; border-radius: 6px; font-weight: 600; text-decoration: none; display: inline-block; }
+  .btn.approve { background: #4ade80; color: #000; }
+  .btn.reject  { background: #f47171; color: #fff; }
+  .btn.defer   { background: #1c1c1c; color: #9a9a9a; border: 1px solid rgba(255,255,255,0.14); }
+  .btn:hover { opacity: 0.85; }
+  .tg-note { font-size: 11px; color: #6a6a6a; margin-top: 6px; }
+  .back { font-size: 12px; color: #DAA520; text-decoration: none; display: inline-block; margin-bottom: 16px; }
+  .back:hover { text-decoration: underline; }
+  .empty { color: #6a6a6a; padding: 24px 0; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<a class="back" href="index.html">← Back to briefing</a>
+
+<h1>GUI Change Proposals</h1>
+<p class="subtitle">Generated 2026-05-17 08:53 UTC · Aviation-expert evaluator runs every 12h · Tap Approve/Reject to send via Telegram</p>
+
+<div class="stats">
+  <div class="stat"><strong>6</strong>Total proposals</div>
+  <div class="stat"><strong>6</strong>Pending review</div>
+  <div class="stat"><strong>0</strong>Approved</div>
+</div>
+
+<div class="filters">
+  <a class="filter active" href="#" onclick="filter(event,'ALL')">All (6)</a>
+  <a class="filter" href="#" onclick="filter(event,'PENDING_REVIEW')">Pending (6)</a>
+  <a class="filter" href="#" onclick="filter(event,'APPROVED')">Approved (0)</a>
+  <a class="filter" href="#" onclick="filter(event,'REJECTED')">Rejected</a>
+  <a class="filter" href="#" onclick="filter(event,'DEFERRED')">Deferred</a>
+</div>
+
+<div id="cards">
+
+    <div class="card" data-status="PENDING_REVIEW">
+      <div class="card-header">
+        <div class="card-id">#1</div>
+        <div class="card-title">Move &quot;Distributions&quot; tab out of the operational tab strip</div>
+        <div class="badge" style="background:rgba(218,165,32,0.12);color:#DAA520;border:1px solid #DAA52040">PENDING_REVIEW</div>
+      </div>
+      <div class="meta">
+        <span>📂 LAYOUT</span>
+        <span>🟡 Medium</span>
+        <span>⚡ Small</span>
+      </div>
+      <div class="problem"><strong>Problem:</strong> `Distributions` (HTTP health pings to :8906/:8888) is in tab position #2 — the highest-eye-real-estate slot after IBrief. A dispatcher actively making a route decision will never click it. Its position pushes the operationally critical `NOTAM Analysis` to position #5 and `Traffic Intel` to position #9, both buried behind less-important tabs.</div>
+      <div class='proposed'><strong>Proposed:</strong> Move `Distributions` to the far-right of the tab strip, adjacent to `Operations` (the other sys-admin tab). Specifically in `index.html:1224–1238`:
+
+Before:
+```
+brief → distributions → fir → gateways → notams → series → sequence → compliance → traffic → contingency → prd → amendments → fps-watcher →…</div>
+      
+      <div class="actions">
+        <a class="btn approve" href="https://t.me/matilda_axel_bot?text=/approve%201">✓ Approve</a>
+        <a class="btn reject"  href="https://t.me/matilda_axel_bot?text=/reject%201">✗ Reject</a>
+        <a class="btn defer"   href="https://t.me/matilda_axel_bot?text=/defer%201">⏸ Defer</a>
+      </div>
+    </div>
+    <div class="card" data-status="PENDING_REVIEW">
+      <div class="card-header">
+        <div class="card-id">#2</div>
+        <div class="card-title">Add a &quot;Route Brief&quot; composite view</div>
+        <div class="badge" style="background:rgba(218,165,32,0.12);color:#DAA520;border:1px solid #DAA52040">PENDING_REVIEW</div>
+      </div>
+      <div class="meta">
+        <span>📂 WORKFLOW</span>
+        <span>🔴 High</span>
+        <span>🏗️ Large</span>
+      </div>
+      <div class="problem"><strong>Problem:</strong> No single view answers &quot;for route X (DOH → LHR via NARMI/UM688), give me FIR status + NOTAMs touching this route + observed traffic + alternates.&quot; Right now the dispatcher:
+1. Opens Route Plotter, types route, plots on map
+2. Switches to NOTAM Analysis, filters by FIR
+3. Switches to Traffic Intel, finds matching crossings
+4. Switches to Gateways, checks NARMI status
+5. Switches to Contingency, loo…</div>
+      <div class='proposed'><strong>Proposed:</strong> New tab `route-brief` (or extend the Route Plotter floating panel with a &quot;Brief&quot; mode tab). When a route is plotted:
+- Show plotted route at top (sticky)
+- 4-column grid: FIRs crossed (status icon + NOTAM count), NOTAMs hitting any waypoint/airway, Recent traffic matching this route (last 48h count …</div>
+      
+      <div class="actions">
+        <a class="btn approve" href="https://t.me/matilda_axel_bot?text=/approve%202">✓ Approve</a>
+        <a class="btn reject"  href="https://t.me/matilda_axel_bot?text=/reject%202">✗ Reject</a>
+        <a class="btn defer"   href="https://t.me/matilda_axel_bot?text=/defer%202">⏸ Defer</a>
+      </div>
+    </div>
+    <div class="card" data-status="PENDING_REVIEW">
+      <div class="card-header">
+        <div class="card-id">#3</div>
+        <div class="card-title">Merge or cross-link &quot;Series Health&quot; and &quot;Sequence Health&quot;</div>
+        <div class="badge" style="background:rgba(218,165,32,0.12);color:#DAA520;border:1px solid #DAA52040">PENDING_REVIEW</div>
+      </div>
+      <div class="meta">
+        <span>📂 UX_MAJOR</span>
+        <span>🟡 Medium</span>
+        <span>🔧 Medium</span>
+      </div>
+      <div class="problem"><strong>Problem:</strong> Adjacent tabs `series` (#6) and `sequence` (#7) both have &quot;Health&quot; in the name and both involve NOTAM gap analysis. A dispatcher seeing them side-by-side has to remember:
+- *Series* = NOTAM series numbering gaps (e.g. A0853/A0855 skipped — did we miss A0854?)
+- *Sequence* = FIR corridor gateway sequence (e.g. OTDF → OEJD → OMAE chain status)
+
+These are completely different concepts but share a sim…</div>
+      <div class='proposed'><strong>Proposed:</strong> Two options, presented for review:
+
+A) **Rename and separate**: `Series Health` → `NOTAM Gap Monitor`. `Sequence Health` → `Corridor Status`. Cheap (label-only change in `index.html:1229–1230`).
+
+B) **Merge into one &quot;Health&quot; tab with sub-nav**: similar pattern to Routings → Gateways/Pre-AIRAC subnav…</div>
+      
+      <div class="actions">
+        <a class="btn approve" href="https://t.me/matilda_axel_bot?text=/approve%203">✓ Approve</a>
+        <a class="btn reject"  href="https://t.me/matilda_axel_bot?text=/reject%203">✗ Reject</a>
+        <a class="btn defer"   href="https://t.me/matilda_axel_bot?text=/defer%203">⏸ Defer</a>
+      </div>
+    </div>
+    <div class="card" data-status="PENDING_REVIEW">
+      <div class="card-header">
+        <div class="card-id">#4</div>
+        <div class="card-title">Hidden &quot;Pre-AIRAC&quot; tab needs better discoverability</div>
+        <div class="badge" style="background:rgba(218,165,32,0.12);color:#DAA520;border:1px solid #DAA52040">PENDING_REVIEW</div>
+      </div>
+      <div class="meta">
+        <span>📂 UX_MAJOR</span>
+        <span>🟢 Low</span>
+        <span>⚡ Small</span>
+      </div>
+      <div class="problem"><strong>Problem:</strong> `data-tab=&quot;pre-airac&quot;` (`index.html:1540`) has tab content but NO entry in the `.panel-tabs` strip. It's accessed only via the Routings sub-nav pill (`index.html:1487`). This makes a meaningful feature (next-cycle RAD comparison + Route Finder Health) effectively invisible unless the dispatcher already knows the Routings tab has a sub-nav.</div>
+      <div class='proposed'><strong>Proposed:</strong> Either:
+- Promote `pre-airac` to a first-class tab between `gateways` and `notams`
+- Or add a visible badge/indicator on the `Routings` tab when next-cycle data is loaded (e.g., &quot;Routings [+]&quot; or count badge of changed routes)</div>
+      
+      <div class="actions">
+        <a class="btn approve" href="https://t.me/matilda_axel_bot?text=/approve%204">✓ Approve</a>
+        <a class="btn reject"  href="https://t.me/matilda_axel_bot?text=/reject%204">✗ Reject</a>
+        <a class="btn defer"   href="https://t.me/matilda_axel_bot?text=/defer%204">⏸ Defer</a>
+      </div>
+    </div>
+    <div class="card" data-status="PENDING_REVIEW">
+      <div class="card-header">
+        <div class="card-id">#5</div>
+        <div class="card-title">Persist custom tab order per-user (localStorage)</div>
+        <div class="badge" style="background:rgba(218,165,32,0.12);color:#DAA520;border:1px solid #DAA52040">PENDING_REVIEW</div>
+      </div>
+      <div class="meta">
+        <span>📂 WORKFLOW</span>
+        <span>🟡 Medium</span>
+        <span>🔧 Medium</span>
+      </div>
+      <div class="problem"><strong>Problem:</strong> Tab order is hardcoded (`index.html:1223–1239`). Two dispatchers might prefer different workflows — a routing specialist wants Gateways/Sequence first; a NOTAM-watch wants NOTAM Analysis/Series Health first. There's no way to personalize.</div>
+      <div class='proposed'><strong>Proposed:</strong> Add drag-to-reorder on `.panel-tab` buttons:
+- `draggable=&quot;true&quot;` on each `.panel-tab`
+- `dragstart` / `dragover` / `drop` handlers (~40 LOC in `fr24-layout.js`)
+- Persist order array in `localStorage` key `fr24-tab-order`
+- On load, sort `.panel-tabs` children by saved order, fall back to default
+
+…</div>
+      
+      <div class="actions">
+        <a class="btn approve" href="https://t.me/matilda_axel_bot?text=/approve%205">✓ Approve</a>
+        <a class="btn reject"  href="https://t.me/matilda_axel_bot?text=/reject%205">✗ Reject</a>
+        <a class="btn defer"   href="https://t.me/matilda_axel_bot?text=/defer%205">⏸ Defer</a>
+      </div>
+    </div>
+    <div class="card" data-status="PENDING_REVIEW">
+      <div class="card-header">
+        <div class="card-id">#6</div>
+        <div class="card-title">Consolidate NOTAM-list views into a strategy-pluggable component</div>
+        <div class="badge" style="background:rgba(218,165,32,0.12);color:#DAA520;border:1px solid #DAA52040">PENDING_REVIEW</div>
+      </div>
+      <div class="meta">
+        <span>📂 DATA</span>
+        <span> Low (UX); High (maintainability)</span>
+        <span>🏗️ Large</span>
+      </div>
+      <div class="problem"><strong>Problem:</strong> Five modules render NOTAM lists in different formats from the same `notamData`:
+- `fr24-notam.js` — Full table
+- `fr24-compliance.js` — Tracked subset
+- `fr24-ibrief.js` — 48h time window
+- `fr24-fps-watcher.js` — Path-impact alerts
+- `fr24-series-health.js` — Sequence completeness
+
+Each module hand-rolls its own row layout, sort, filter, and detail panel. Visual inconsistency: a NOTAM looks sligh…</div>
+      <div class='proposed'><strong>Proposed:</strong> Extract a shared `FR24.NotamList` component into `lib/fr24-notam-list.js`. Each consumer passes a `filterFn`, a `columns` config, and a `detailRenderer`. The five existing modules become thin adapters.
+
+This is a refactor with no end-user feature change. But it reduces NOTAM-rendering surface from 5…</div>
+      
+      <div class="actions">
+        <a class="btn approve" href="https://t.me/matilda_axel_bot?text=/approve%206">✓ Approve</a>
+        <a class="btn reject"  href="https://t.me/matilda_axel_bot?text=/reject%206">✗ Reject</a>
+        <a class="btn defer"   href="https://t.me/matilda_axel_bot?text=/defer%206">⏸ Defer</a>
+      </div>
+    </div>
+</div>
+<p id="empty" class="empty" style="display:none">No proposals match this filter.</p>
+
+<p class="tg-note" style="margin-top:16px">
+  Tapping Approve/Reject opens <strong>@matilda_axel_bot</strong> in Telegram with the command pre-filled.
+  Send it to apply — Matilda will forward the vote to Home PC immediately.
+</p>
+
+<script>
+var cur = 'ALL';
+function filter(e, status) {
+  e.preventDefault();
+  cur = status;
+  document.querySelectorAll('.filter').forEach(function(f) { f.classList.remove('active'); });
+  e.target.classList.add('active');
+  var cards = document.querySelectorAll('.card');
+  var shown = 0;
+  cards.forEach(function(c) {
+    var show = status === 'ALL' || c.dataset.status === status;
+    c.style.display = show ? '' : 'none';
+    if (show) shown++;
+  });
+  document.getElementById('empty').style.display = shown === 0 ? '' : 'none';
+}
+</script>
+</body>
+</html>
